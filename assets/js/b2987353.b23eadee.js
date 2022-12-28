@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkocp_saurus_2=self.webpackChunkocp_saurus_2||[]).push([[637],{8312:s=>{s.exports=JSON.parse('{"permalink":"/ocp-saurus2/blog/tags/hello","page":1,"postsPerPage":10,"totalPages":1,"totalCount":2,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
