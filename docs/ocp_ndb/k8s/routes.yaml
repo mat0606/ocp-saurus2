@@ -1,0 +1,102 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-a
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/"   
+  to:
+    kind: Service
+    name: react-cluster-ip-service
+    port: 
+      number: 3000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-b
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/admin"   
+  to:
+    kind: Service
+    name: django-cluster-ip-service
+    port: 
+      number: 8000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-c
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/api"   
+  to:
+    kind: Service
+    name: django-cluster-ip-service
+    port: 
+      number: 8000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-d
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/static/admin/"   
+  to:
+    kind: Service
+    name: django-cluster-ip-service
+    port: 
+      number: 8000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-e
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/static/rest_framework/"   
+  to:
+    kind: Service
+    name: django-cluster-ip-service
+    port: 
+      number: 8000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-f
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/static/"   
+  to:
+    kind: Service
+    name: react-cluster-ip-service
+    port: 
+      number: 3000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-path-g
+spec:
+  host: flower.apps.xyz.ntnxlab.local
+  path: "/media/"   
+  to:
+    kind: Service
+    name: react-cluster-ip-service
+    port: 
+      number: 3000
