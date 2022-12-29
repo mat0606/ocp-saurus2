@@ -24,13 +24,16 @@ scalability, and rapid innovation through One-Click management.
 
 :::info
 
+-   **OCP: UPI Installation** - 45 minutes
 -   **OCP: IPI Installation** - 60 minutes
--   **Nutanix Storage CSI** - 30 minutes
--   **OCP and Nutanix NDB** - 60 minutes
--   **OCP Workload Backup/Restore** - 60 minutes 
--   **OCP: NCM Installation** - 90 minutes
--   **OCP: Assited Installer** - 40 minutes
--   **Optional Labs** - 30 minutes
+-   **Nutanix CSI Deployment** - 15 minutes
+-   **Nutanix CSI operator lifecycle management** - 15 minutes
+-   **CSI metrics monitor w/ Prometheus** - 15 minutes 
+-   **Nutanix Volumes Storage Class deployment on OCP** - 15 minutes
+-   **Nutanix Files Storage Class deployment on OCP** - 15 minutes
+-   **Nutanix Files Deployment on Nutanix for OCP** - 15 minutes
+-   **Backup to Nutanix Objects using OADP** - 15 minutes
+-   **Objects metrics monitor w/ Prometheus** - 15 minutes
 
 All lab durations are estimates. Actual duration will depend on your familiarity with OCP, Linux and kubernetes concepts in general.
 :::
@@ -38,34 +41,31 @@ All lab durations are estimates. Actual duration will depend on your familiarity
 ## What's New
 
 -   This workshop uses for the following software versions:
-    -   AOS 6.1.1.5
-    -   Prism Central - pc.2022.4.0.1
-    -   Calm 3.4.1
+    -   AOS 6.5.1.8
+    -   Prism Central - pc.2022.6.0.1
+    -   Nutanix Cloud Manager Self Service 3.6.0
+    -   Nutanix Files 4.2.1
+    -   Nutanix Objects 3.6.0
 
 ## Agenda
 
+-   OCP UPI Installation
 -   OCP IPI installation
--   Nutanix Storage CSI  
--   OCP and Nutanix NDB
--   OCP on Nutanix NCM
-    -   OCP: Deploying OCP Cluster
-    -   OCP: Scale out and Scale in OCP Cluster Worker Nodes
-    -   OCP: Deploying Nutanix CSI Drivers for OCP Cluster
-    -   OCP: Deploy using Red Hat Assited Installer
--   OCP and IPI installaation
--   Workloads on OCP
-    -   Deploying Wordpress application on OCP
-    -   Setting up Nutanix Objects as for backup target
-    -   Deploying Kasten K10 backup applicaiton on OCP
-    -   Backup and Restore Wordpress
--   Optional Labs
-    -   OCP: Deploy second OCP cluster using Calm
-    -   OCP: Provisioning storage to OCP Image Registry
+-   Nutanix Storage CSI Deployment 
+-   Nutanix CSI Operator Lifecycle Management
+-   CSI Metrics Monitor with Prometheus
+-   Nutanix Volume Storage Class Deployment
+-   Nutanix Files Storage Class Deployment
+-   Nutanix Files Deployment
+-   Backup to Nutanix Objects using OADP
+-   Objects metric monitor with Prometheus
+
 ## Initial Setup
 
 -   Take note of the *Passwords* being used from you RX reservation details
 -   Log into your virtual desktops (connection info below)
 -   Login to Global Protect VPN if you have access
+
 ## Cluster Assignment
 
 The instructor will inform the attendees of their assigned clusters.
