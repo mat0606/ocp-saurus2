@@ -1,7 +1,11 @@
 module.exports = {
   tutorialSidebar:[
     "intro",
-    "ocp_ipi_install/ocp_ipi_install",
+    {
+      type: 'category',
+      label: 'OpenShift Installation',
+      items: ["ocp_upi_install/ocp_upi_install","ocp_ipi_install/ocp_ipi_install"]
+    },
     {
       type: 'category',
       label: 'Nutanix Storage CSI',

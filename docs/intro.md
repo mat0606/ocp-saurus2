@@ -49,8 +49,8 @@ All lab durations are estimates. Actual duration will depend on your familiarity
 
 ## Agenda
 
--   OCP UPI Installation
--   OCP IPI installation
+-   OCP User Provision Installation (UPI)
+-   OCP Installer Provision Installation (IPI)
 -   Nutanix Storage CSI Deployment 
 -   Nutanix CSI Operator Lifecycle Management
 -   CSI Metrics Monitor with Prometheus
@@ -120,34 +120,6 @@ Each cluster is configured with 2 VLANs which can be used for VMs:
 |-----------------| ------------------- |-------- | -----------|
 |Primary          | 10.42.*XYZ*.1/25    | 0       | 10.42.*XYZ*.50-10.42.*XYZ*.124|
 |Secondary        | 10.42.*XYZ*.129/25  | *XYZ1*  | 10.42.*XYZ*.132-10.42.*XYZ*.253|
-
-
-#### Single Node HPOC Clusters
-
-For some workshops we are using Single Node Clusters (SNC). The reason
-for this is to allow more people to have a dedicated cluster but still
-have enough free clusters for the bigger workshops including those for
-customers.
-
-The network in the SNC config is using a /26 network. This splits the
-network address into four equal sizes that can be used for workshops.
-The below table describes the setup of the network in the four
-partitions. It provides essential information for the workshop with
-respect to the IP addresses and the services running at that IP address.
-
-
-|Partition 1     |Partition 2      | Partition 3      | Partition 4    | Service     |  Comment
-|--------------- |---------------  |----------------- |----------------- |------------- |---------------
-|10.38.x.1       |10.38.x.65        |10.38.x.129       |10.38.x.193       |Gateway          |     
-|10.38.x.5       |10.38.x.69        |10.38.x.133       |10.38.x.197       |AHV Host         |   
-|10.38.x.6       |10.38.x.70        |10.38.x.134      | 10.38.x.198       |CVM IP           |
-|10.38.x.7       |10.38.x.71        |10.38.x.135       |10.38.x.199      | Cluster IP       |
-|10.38.x.8       |10.38.x.72        |10.38.x.136       |10.38.x.200      | Data Services IP |           
-|10.38.x.9       |10.38.x.73        |10.38.x.137       |10.38.x.201      | Prism Central IP |           
-|10.38.x.11      |10.38.x.75        |10.38.x.139       |10.38.x.203      | AutoDC IP(DC)    |
-|10.38.x.32-37   |10.38.x.96-101    |10.38.x.160-165   |10.38.x.224-229  | Objects 1        | 
-|10.38.x.38-58   |10.38.x.102-122   |10.38.x.166-186  | 10.38.x.230-250  | Primary          | 6 Free IPs for static assignment|
-
 
 ### Credentials
 

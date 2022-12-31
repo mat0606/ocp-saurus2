@@ -1,9 +1,16 @@
 ---
-title: "OCP IPI Installation"
+title: "Option 2: IPI Installation"
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+
+# Installation Difference between UPI & IPI
+
+  This picture shows the differences between UPI and IPI installation.  The IPI installer invokes Nutanix
+  Prism Central API to provision the VMs before installing OpenShift.
+
+   ![](images/IPI-UPI.png)
 
 # OCP IPI Installation
 
@@ -39,8 +46,8 @@ We have referred to the following documents for building this lab:
 
 The following pre-requisites are necessary:
 
-- Prism Central - at least **pc.2022.4.0.2**
-- AOS - at least **5.20.4**
+- Prism Central - **pc.2022.6.0.1**
+- AOS - **6.5.1.8**
 - Access to RedHat Console to download the following    
   - Pull secret
   - IPI installation binaries
@@ -95,7 +102,7 @@ We will first find two IPs for OCP ``api`` and ``apps`` ingress endpoints in our
 1. Find the CIDR range for your  **Primary** IPAM network either from [RX](https://rx.corp.nutanix.com/) or from your instrutor
 
    ```buttonless title="CIDR example for your Nutanix cluster"
-   10.38.18.192/26
+   10.38.238.160/27
    ```
 
 2. Logon to your UserXX-LinuxToolsVM (deployed on the HPOC cluster) using Mac Terminal or Windows Putty 
@@ -117,28 +124,25 @@ We will first find two IPs for OCP ``api`` and ``apps`` ingress endpoints in our
    nmap -v -sn  <your CIDR>
    ```
    ```bash title="Sample command"
-   nmap -v -sn 10.38.18.192/26
+   nmap -v -sn 10.38.238.160/27
 
    ```
    ```buttonless {1,2} title="Sample output - choose the first two consecutive IPs"
-   Nmap scan report for 10.38.18.219 [host down] 
-   Nmap scan report for 10.38.18.220 [host down]
-   Nmap scan report for 10.38.18.221
+   Nmap scan report for 10.38.238.161 [host down] 
+   Nmap scan report for 10.38.238.162 [host down]
+   Nmap scan report for 10.38.18.163
    Host is up (-0.098s latency).
    ```
 
-2. Logon to any CVM in your cluster and execute the following to add chosen static IPs to the **Primary** IPAM network
+2. Logon to any CVM (Find the CVM from the Trainer) in your cluster and execute the following to add chosen static IPs to the **Secondary** IPAM network
 
    - Username: nutanix
    - Password: your cluster password 
    
    ```bash
-   acli net.add_to_ip_blacklist <your-ipam-ahv-network> ip_list=10.38.18.219,10.38.18.220
+   acli net.add_to_ip_blacklist <your-ipam-ahv-network> ip_list=<ip address 1>,<ip address 2>
    ```
-   ```bash title="Sample command"
-   acli net.add_to_ip_blacklist Primary ip_list=10.38.18.219,10.38.18.220
-   ```
-
+   
 ### Add DNS Records
 
 In this section we will add PC, API and APPS Ingress DNS records for lookup by OCP IPI installer.
@@ -152,7 +156,7 @@ Your OCP cluster's name becomes a subdomain in your DNS zone ``ntnxlab.local``. 
 
    > **Username**: administrator
 
-   > **Password**: default
+   > **Password**: Please check with your trainer
 
 2. We will add the following entries to DNS server using the two consecutive IPs you found in the previous section
    
@@ -163,9 +167,9 @@ Your OCP cluster's name becomes a subdomain in your DNS zone ``ntnxlab.local``. 
    :::
    
    ```buttonless
-   10.38.18.219   api.your_ocp_cluster_subdomain.ntnxlab.local
-   10.38.18.220   *.apps.your_ocp_cluster_subdomain.ntnxlab.local
-   10.38.18.201   pc.ntnxlab.local
+   <IP address 1>   api.your_ocp_cluster_subdomain.ntnxlab.local
+   <IP address 2>   *.apps.your_ocp_cluster_subdomain.ntnxlab.local
+   10.38.x.39   pc.ntnxlab.local
    ```
 
 2. Open PowerShell as Administrator and create the two A records
@@ -181,34 +185,17 @@ Your OCP cluster's name becomes a subdomain in your DNS zone ``ntnxlab.local``. 
    ```
 
    ```buttonless title="Sample commands with 'xyz' as a subdomain and your OCP cluster name"
-   Add-DnsServerResourceRecordA -Name api.xyz -IPv4Address 10.38.18.219 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local
-   Add-DnsServerResourceRecordA -Name *.apps.xyz -IPv4Address 10.38.18.220 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local 
-   Add-DnsServerResourceRecordA -Name pc -IPv4Address 10.38.18.201 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local
+   Add-DnsServerResourceRecordA -Name api.xyz -IPv4Address 10.38.238.161 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local
+   Add-DnsServerResourceRecordA -Name *.apps.xyz -IPv4Address 10.38.238.162 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local 
+   Add-DnsServerResourceRecordA -Name pc -IPv4Address 10.38.238.39 -ZoneName ntnxlab.local -ZoneScope ntnxlab.local
    ```
 
 3. Test name resolution for added entries
-
-   ```PowerShell {6,13,20}
-   nslookup api.xyz.ntnxlab.local
-   Server: dc.ntnxlab.local
-   Address: 10.38.18.203
-
-   Name: api.xyz.ntnxlab.local
-   Address: 10.38.18.219 
-   #
-   nslookup myapp.apps.xyz.ntnxlab.local
-   Server: dc.ntnxlab.local
-   Address: 10.38.18.203
-
-   Name: myapp.apps.xyz.ntnxlab.local
-   Address: 10.38.18.220
-   #
+   
+   ```
+   nslookup api.<your_ocp_cluster_subdomain>
+   nslookup myapp.apps.<your_ocp_cluster_subdomain>
    nslookup pc.ntnxlab.local
-   Server: dc.ntnxlab.local
-   Address: 10.38.18.203
-
-   Name: pc.ntnxlab.local
-   Address: 10.38.3.201
    ```
 
 ### Downloading OCP Tools 
@@ -225,7 +212,7 @@ In this section please using the download links provided is also ok.
 :::
 
 
-1. Logon to UserXX-LinuxToolsVM and download the binaries 
+1. Logon to LinuxToolVM (Eg LinuxToolVM2,3 or 4) and download the binaries 
 
    > **Username**: root
 
@@ -271,13 +258,13 @@ In this section please using the download links provided is also ok.
 
 In this section we will do the following:
 
-- Create a Root CA on your UserXX-LinuxToolsVM
+- Create a Root CA on your LinuxToolVM 
 - Create a Certificate Signing Request (CSR) for Prism Central 
 - Sign the CSR using Root CA's private key
 
-All this will be done on the UserXX-LinuxToolsVM.
+All this will be done on the LinuxToolVM.
 
-1. In the UserXX-LinuxToolsVM, Create a the Root CA certificates
+1. In the LinuxToolVM (Eg LinuxToolVM2), Create a the Root CA certificates
 
    ```bash
    openssl genrsa -out rootCA.key 2048
@@ -293,9 +280,9 @@ All this will be done on the UserXX-LinuxToolsVM.
    For some fields there will be a default value,
    If you enter '.', the field will be left blank.
    -----
-   Country Name (2 letter code) [XX]:JP
-   State or Province Name (full name) []:Chiba
-   Locality Name (eg, city) [Default City]:Kashiwa
+   Country Name (2 letter code) [XX]:SG
+   State or Province Name (full name) []:Singapore
+   Locality Name (eg, city) [Default City]:Singapore
    Organization Name (eg, company) [Default Company Ltd]:nutanix
    Organizational Unit Name (eg, section) []:rootca
    Common Name (eg, your name or your server's hostname) []:rootca.ntnxlab.local
@@ -339,9 +326,9 @@ All this will be done on the UserXX-LinuxToolsVM.
    For some fields there will be a default value,
    If you enter '.', the field will be left blank.
    -----
-   Country Name (2 letter code) []:JP
-   State or Province Name []:Chiba
-   Locality Name []:Kashiwa
+   Country Name (2 letter code) []:SG
+   State or Province Name []:Singapore
+   Locality Name []:Singapore
    Organization Name [pc]:pc
    Common Name [ntnxlab.local]:ntnxlab.local
    ```
@@ -386,23 +373,31 @@ All this will be done on the UserXX-LinuxToolsVM.
    cat pc.crt
    ```
 
-9. In UserXX-WindowsToolsPC, use Notepad to create three new files with the same names
+9. In WindowsToolVM (Eg WindowsToolVM2, 3 or 4), use Notepad to create three new files with the same names
 
-7. Copy the ouput of previous cat command of ``rootCA.crt``, ``pc.key`` and ``pc.crt`` files into to your UserXX-WindowsToolsPC VM in any directory
+7. Copy the ouput of previous cat command of ``rootCA.crt``, ``pc.key`` and ``pc.crt`` files into to your WindowsToolVM in any directory
 
    ![](images/certs-on-wintools.png)
 
 8. Logon to Prism Central Web GUI on the WindowsToolsVM
 
    ```url
-   https://pc.ntnxlab.local/
+   https://pc.ntnxlab.local:9440/
    ```
 
-9. Go to **Settings > SSL Certificate**
+   ![](images/PC-Cert-1a.png)
 
-10. Click on **Replace Certificate** 
+9. In Prism Central, go to **Settings 
+
+   ![](images/PC-Cert-2.png)
+
+10.  Click on SSL Certificate**. Click on **Replace Certificate**
+
+   ![](images/PC-Cert-3.png)
 
 11. Select **Import Key and Certificate**
+
+   ![](images/PC-Cert-4.png)
 
 12. Click **Next**
 
@@ -462,7 +457,7 @@ Setting up of is necessary for Nutanix cluster credentials to be used with OCP c
 
 Refer to [Cloud Credential Operator CCO](https://docs.openshift.com/container-platform/4.7/authentication/managing_cloud_provider_credentials/about-cloud-credential-operator.html) for more information. 
 
-1. In the UserXX-LinuxToolsVM, download and setup ``ccoctl`` using the following commands
+1. In the LinuxToolsVM (Eg LinuxToolVM1, 2, 3 or 4), download and setup ``ccoctl`` using the following commands
 
    ```bash
    RELEASE_IMAGE=$(openshift-install version | awk '/release image/ {print $3}')
