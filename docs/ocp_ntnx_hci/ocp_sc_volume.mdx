@@ -1,0 +1,81 @@
+---
+sidebar_position: 7
+title: "Option 1: Create Nutanix Volume Storage Class using Redhat OpenShift Console"
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Option 1: Create Nutanix Volume Storage Class using RedHat OpenShift Console
+    
+1.  You can create the Nutanix Volume Storage Class using one of the approaches below:
+
+    -  **Option 1: Use RedHat OpenShift Console **
+    -  **Option 2: Execute command line in Load Balancer or **
+    
+## Pre-requisites:
+
+1.  You had used NCM Self Service to deploy the Nutanix CSI.
+
+## Modify Secret in RedHat OperatorHub
+
+1.  Click on **Workload->Secrets**.  A secret named **ntnx-secret** was created in the **ntnx-system** namespace 
+    when deploying the CSI through NCM Self Service.  Click on **Edit Secret**
+
+    ![](ocp_volume_images/secret0.png)
+
+2.  This is the default secret created through NCM Self Service.  The parameter was wrong.  Click on **Cancel**
+
+    ![](ocp_volume_images/secret0-1.png)
+
+3.  Click on **Delete secret**
+
+    ![](ocp_volume_images/secret0-2.png)
+
+4.  Filter by **OCP Project created earlier**
+
+    ![](ocp_volume_images/secret1.png)
+
+5.  Click on **Key/Value secret**.  
+
+    ![](ocp_volume_images/secret2.png)
+
+6.  Key in the following.  Click on **Create**
+
+    - Replace the password with the Prism Element password provided by the trainer
+
+    ![](ocp_volume_images/secret3.png)
+
+7.  Observe the **ntnx-secret** was created
+
+    ![](ocp_volume_images/secret4.png)
+
+## Create Nutanix Volume Storage Class
+
+1.  Click on **Storage**->**Storage Classes**.  Click on **Create Storage Class**
+
+    ![](ocp_volume_images/volume-sc1.png)
+
+2.  Fill in the following: Click on **Create**
+
+    ![](ocp_volume_images/volume-sc2.png)
+
+3.  Fill in the following parameters:
+
+    ![](ocp_volume_images/volume-sc3.png)
+    - Parameters - **Values**     
+    - csi.storage.k8s.io/provisioner-secret-name - **ntnx-secret** 
+    - csi.storage.k8s.io/provisioner-secret-namespace - **ntnx-system** 
+    - csi.storage.k8s.io/node-publish-secret-name  - **ntnx-secret**
+    - csi.storage.k8s.io/node-publish-secret-namespace - **ntnx-system**
+    - csi.storage.k8s.io/controller-expand-secret-name - **ntnx-secret**
+    - csi.storage.k8s.io/controller-expand-secret-namespace - **ntnx-system**
+    - csi.storage.k8s.io/fstype - **ext4**
+    - storageContainer -  **Default**
+    - storageType - **NutanixVolumes**
+  
+
+4.  The storage class was created successfully.
+
+    ![](ocp_volume_images/volume-sc4.png)
+
+   
