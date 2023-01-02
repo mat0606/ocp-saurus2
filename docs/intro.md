@@ -32,7 +32,7 @@ scalability, and rapid innovation through One-Click management.
 -   **Nutanix Volumes Storage Class deployment on OCP** - 15 minutes
 -   **Nutanix Files Storage Class deployment on OCP** - 15 minutes
 -   **Nutanix Files Deployment on Nutanix for OCP** - 15 minutes
--   **Backup to Nutanix Objects using OADP** - 15 minutes
+-   **Backup to Nutanix Objects using OADP** - 45 minutes
 -   **Objects metrics monitor w/ Prometheus** - 15 minutes
 
 All lab durations are estimates. Actual duration will depend on your familiarity with OCP, Linux and kubernetes concepts in general.

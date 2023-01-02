@@ -1,0 +1,86 @@
+---
+sidebar_position: 7
+title: "Modify OpenShift Worker Node VM Sizing"
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Modify the VM sizing of the Worker nodes
+
+```note
+Reference: https://docs.openshift.com/container-platform/4.11/nodes/nodes/nodes-nodes-rebooting.html
+```
+
+1.  Login to Prism Central. The IPI installer had created the following worker nodes with the following specification.  
+It did not meet the minimum requirements for ODF.
+
+    ![](ocp_oadp_images/oadp-2.png) 
+
+2.  Putty into the **LinuxToolVM (Eg LinuxToolVM2, LinuxToolVM3 etc)**.  Retrieve the credential from the trainer.
+
+3.  Run this command to get the KUBECONFIG to connect to the RedHat OpenShift cluster
+
+    - KUBECONFIG=~/openshift/auth/kubeconfig
+    - export KUBECONFIG
+    - oc get nodes
+
+    ![](ocp_oadp_images/oadp-5.png) 
+
+4.  Run this command to mark the node as unschedulable.
+
+    oc adm cordon **node name**
+
+    ![](ocp_oadp_images/oadp-6.png) 
+
+5.  Run this command to drain the node of the running pods.
+
+    oc adm drain **node name** --ignore-daemonsets --delete-emptydir-data --force
+
+    ![](ocp_oadp_images/oadp-7.png) 
+
+6.  Access the node in debug mode
+
+    oc debug node/**node name**
+
+    ![](ocp_oadp_images/oadp-8.png)
+
+7.  Change the root directory to host
+
+    chroot /host
+
+8.  Run the command
+
+    shutdown now
+
+9.  In Prism Central, click on **Action**.  Click on **Update**
+
+    ![](ocp_oadp_images/oadp-9.png)
+
+10.  Change it to
+    ```note
+    vCPU: **8**
+    memory: **24** GIB
+    ```
+    ![](ocp_oadp_images/oadp-10.png)
+
+11.  Click on **Next**.  Click on **Next**.  Click on **Next**.  Click on **Save**
+
+12.  In Prism Central, click on **Action**.  Click on **Power On**
+
+13.  Run this command to mark the node as schedulable.
+
+    oc adm uncordon **node name**
+
+     ![](ocp_oadp_images/oadp-11.png)
+
+14.  Verify the nodes are schedulable.
+
+     ![](ocp_oadp_images/oadp-12.png)
+
+15.  Repeat for the next 2 nodes
+
+16.  Login to RedHat OpenShift console.  
+
+17.  Click on **Compute**.  Click on **Node**.  Filter by **worker**.  Verify the nodes were changed to the new hardware sizing.
+
+     ![](ocp_oadp_images/oadp-13.png)

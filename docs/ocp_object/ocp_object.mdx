@@ -1,0 +1,100 @@
+---
+sidebar_position: 7
+title: "Create Object Bucket and Access Keys in Nutanix"
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Create Object Bucket and Access Keys in Nutanix
+
+## Pre-requisites:
+
+- Nutanix Objects 3.6.0
+- RedHat OpenShift 4.11
+
+## Configure Nutanix Objects to access Active Directory.
+
+1.  **This section needs to be configured once.  Check with the trainer on the assignment**
+
+2.  Login to Prism Central.
+
+3.  Click on hamburger menu and scroll down to **Objects**.  Click on **Access Keys**.
+
+    ![](ocp_object_images/object-1.png)
+
+4.  Click on **Configure Directory**
+
+    ![](ocp_object_images/object-2.png)
+
+5.  Click on **+ Add Directory**
+
+    ![](ocp_object_images/object-3.png)
+
+6.  Fill in the following: Please check with the trainer on the Active Directory IP & Credential
+
+    ![](ocp_object_images/object-4.png)
+    ![](ocp_object_images/object-5.png)
+
+7.  The Active Directory was configured.  Click on **Close**
+
+    ![](ocp_object_images/object-6.png)
+
+## Create Access Key in Nutanix Objects
+
+1.  Click on hamburger menu and scroll down to **Objects**.  Click on **Access Keys**.  Click on **+ Add People**
+
+    ![](ocp_object_images/object-7.png)
+
+2.  Search for **adminuser**.  Choose **adminuser02, adminuser03, adminuser04 etc.**.  Click on **Next**
+
+    ![](ocp_object_images/object-8.png)
+
+3.  Click on **Generate Keys**
+
+    ![](ocp_object_images/object-9.png)
+
+4.  Click on **Download Key**.  **Please keep a copy of the object key**
+
+    ![](ocp_object_images/object-10.png)
+
+5.  Objects Access Key created successfully
+
+    ![](ocp_object_images/object-11.png)
+
+## Create a Bucket in Nutanix Objects
+
+1.  Click on **Objects**.  Drill into the **Object Store**.  It opens a new browser tab.
+
+    ![](ocp_object_images/object-12.png)
+
+2.  Click on **Create Bucket**
+
+    ![](ocp_object_images/object-13.png)
+
+3.  Fill in the following: Click on **Create**
+    - Object Name: **Eg ocp2ipi_bucket, ocp3ipi_bucket etc**
+
+    ![](ocp_object_images/object-14.png)
+
+4.  The object bucket was created
+
+    ![](ocp_object_images/object-15.png)
+
+## Assign user to the bucket
+
+1. Drill into the created object bucket
+
+    ![](ocp_object_images/object-16.png)
+
+2.  Click on **User Access**.  Click on **Edit User Access**
+
+    ![](ocp_object_images/object-17.png)
+
+3.  Select the **adminuser** assigned earlier. **Eg adminuser02, adminuser03 etc**.  Select the **READ, WRITE** permission
+
+    ![](ocp_object_images/object-18.png)
+
+
+
+
+
