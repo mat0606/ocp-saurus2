@@ -24,8 +24,8 @@ scalability, and rapid innovation through One-Click management.
 
 :::info
 
--   **OCP: UPI Installation** - 45 minutes
--   **OCP: IPI Installation** - 60 minutes
+-   **OCP: UPI Installation** - 60 minutes
+-   **OCP: IPI Installation** - 90 minutes
 -   **Nutanix CSI Deployment** - 15 minutes
 -   **Nutanix CSI operator lifecycle management** - 15 minutes
 -   **CSI metrics monitor w/ Prometheus** - 15 minutes 
@@ -69,10 +69,6 @@ All lab durations are estimates. Actual duration will depend on your familiarity
 ## Cluster Assignment
 
 The instructor will inform the attendees of their assigned clusters.
-
-:::note
-
-If these are Single Node Clusters (SNCs) pay close attention on the networking part. The SNCs are setup and configured differently to the 3 or 4 node clusters
 
 :::
 

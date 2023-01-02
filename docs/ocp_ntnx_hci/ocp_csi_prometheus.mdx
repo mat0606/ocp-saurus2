@@ -6,3 +6,45 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # CSI Metric Monitor with Prometheus
+
+1.  Login to Prism Central.
+
+2.  Navigate to Nutanix Calm.  Drill into the application.
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-0.png)
+
+3.  Click on **Service**
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-0-1.png)
+
+4.  Click on **LB_DNS**.  Click on **Open Terminal**
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-0-2.png)
+
+5.  Run this command to install git
+
+    sudo yum install -y git
+
+6.  Run this command to download the CSI files.
+
+    git clone http://github.com/nutanix/csi-plugin.
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-1.png)
+
+7.  Run the following commands to initialize oc.
+
+    ```bash
+    KUBECONFIG=~/openshift/auth/kubeconfig
+    export KUBECONFIG
+    oc get nodes
+    ```
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-2.png)
+
+8.  Navigate to csi-plugin/deploy directory.  Run this command
+
+    ```bash
+    oc -n kube-system create -f service-prometheus-csi.yaml
+    ```
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-3.png)

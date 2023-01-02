@@ -20,7 +20,7 @@ In this lab we will go through the steps of deploying OCP cluster using IPI.
 
 :::info
 
-Estimated time to complete this whole lab is **60 minutes** including OCP cluster deployment.
+Estimated time to complete this whole lab is **90 minutes** including OCP cluster deployment.
 
 The OCP cluster deployment will take up to **30 minutes** once started. 
 
@@ -105,13 +105,13 @@ We will first find two IPs for OCP ``api`` and ``apps`` ingress endpoints in our
    10.38.238.160/27
    ```
 
-2. Logon to your UserXX-LinuxToolsVM (deployed on the HPOC cluster) using Mac Terminal or Windows Putty 
-
+2. Logon to your LinuxToolsVM (deployed on the HPOC cluster) using Mac Terminal or Windows Putty 
+   Eg LinuxToolVM1, LinuxToolVM2, LinuxToolVM3 etc)
+   
    > **Username**: root
-
    > **Password**: default 
 
-3. Prepare the UserXX-LinuxToolsVM 
+3. Prepare the LinuxToolsVM (Eg LinuxToolVM1, LinuxToolVM2, LinuxToolVM3 etc)
    
    ```bash
    yum update -y
@@ -193,8 +193,14 @@ Your OCP cluster's name becomes a subdomain in your DNS zone ``ntnxlab.local``. 
 3. Test name resolution for added entries
    
    ```
-   nslookup api.<your_ocp_cluster_subdomain>
-   nslookup myapp.apps.<your_ocp_cluster_subdomain>
+   nslookup api.<your_ocp_cluster_subdomain>.ntnxlab.local
+   nslookup myapp.apps.<your_ocp_cluster_subdomain>.ntnxlab.local
+   nslookup pc.ntnxlab.local
+   ```
+   This is an example.
+   ```note
+   nslookup api.ocp1ipi.ntnxlab.local
+   nslookup myapp.apps.ocp1ipi.ntnxlab.local
    nslookup pc.ntnxlab.local
    ```
 
@@ -379,7 +385,7 @@ All this will be done on the LinuxToolVM.
 
    ![](images/certs-on-wintools.png)
 
-8. Logon to Prism Central Web GUI on the WindowsToolsVM
+8. Logon to Prism Central Web GUI using Google Chrome on the WindowsToolsVM
 
    ```url
    https://pc.ntnxlab.local:9440/
@@ -529,9 +535,9 @@ Refer to [Cloud Credential Operator CCO](https://docs.openshift.com/container-pl
 
 In this section we will create our installation configuration files which will be then used in the next section to deploy an OCP cluster.
 
-### Preparing UserXX-LinuxToolsVM 
+### Preparing LinuxToolsVM 
 
-1. Logon to your UserXX-LinuxToolsVM 
+1. Logon to your LinuxToolsVM (Eg LinuxToolVM1, LinuxToolVM2, LinuxToolVM3 etc)
 
 2. Copy the Root CA's public certificate to the local certiface repository
 
@@ -575,9 +581,67 @@ In this section we will create our installation configuration files which will b
    |    .=o. .o.     |
    +----[SHA256]-----+
    ```
+### Verify nslookup in LinuxToolVM
+
+1.  In your LinuxToolVM, run the following command
+
+   ```bash
+   yum -y install bind-utils
+   nslookup pc.ntnxlab.local
+   ```
+
+2.  Verify the successful resolution from the nameserver.
+**This example shows pc.ntnxlab.local resolves to 10.38.238.39 for PHX-POC238 HPOC.**
+**PHX-POC243 HPOC needs to resolve to 10.38.243.39 etc.**
+
+   ![](images/nslookup-1.png)
+
+3. The following picture shows the LinuxToolVM was **not configured to the right nameserver.**
+
+   ![](images/nslookup-2.png)
+
+4.  Run this command to change the nameserver
+
+   ```bash
+   vi /etc/resolv.conf
+   ```
+
+5.  Change the contents to the nameserver for each HPOC specified by your instructor.  
+**Eg 10.38.243.41 for PHX-POC243, 10.38.244.41 for PHX-POC244**
+
+   ![](images/nslookup-3.png)
+
+6.  Run the nslookup command to verify the successful DNS resolution.  
+
+
+   ```bash
+   nslookup pc.ntnxlab.local
+   ```
+
+### Find out the UUID of Prism Central Subnet
+
+1.  In Prism Central, click on **Subnet**.  Click on **Secondary**
+
+   ![](images/Subnet-1.png)
+
+2.  Note down the **Subnet UUID**
+
+   ![](images/Subnet-2.png)
+
+### Find out the UUID of Prism Element Cluster
+
+1. In Prism Central, click on the cluster.
+
+   ![](images/PE-1.png)
+
+2.  Note down the **Prism Element Cluster UUID**
+
+   ![](images/PE-2.png)
+
+
 ### Creating the Installation Manifests (files)
 
-1. In your UserXX-LinuxToolsVM 
+1. In your LinuxToolsVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
 
 2. Change to you working directory that we created before (if not there already)
 
@@ -593,7 +657,11 @@ In this section we will create our installation configuration files which will b
    ```bash
    openshift-install create install-config 
    ```
+   ```note
+   Replace the parameters with the configuration generated earlier and provided by the trainer
+   ```
    ```buttonless title="Execution example - use up and down arrow keys to choose options"
+   
    # openshift-install create install-config 
    ? SSH Public Key /root/.ssh/id_rsa.pub
    ? Platform nutanix
@@ -602,12 +670,11 @@ In this section we will create our installation configuration files which will b
    ? Username admin
    ? Password [? for help] **********                 # << Your Prism Central password entered as plain text
    INFO Connecting to Prism Central pc.ntnxlab.local 
-   ? Prism Element PHX-SPOC018-4                      # << Choose your Prism Element cluster
-   INFO Defaulting to only available network: Primary 
-   ? Virtual IP Address for API 10.38.18.219          # << Type the API IP 
-   ? Virtual IP Address for Ingress 10.38.18.220      # << Type the Ingress IP
+   ? Prism Element PHX-POC238                      # << Choose your Prism Element cluster
+   ? Virtual IP Address for API 10.38.238.133          # << Type the API IP 
+   ? Virtual IP Address for Ingress 10.38.238.134      # << Type the Ingress IP
    ? Base Domain ntnxlab.local                        # << Type the name of your base domain 
-   ? Cluster Name xyz                                 # << Type the name of your sub domain or OCP cluster's name
+   ? Cluster Name ocp1ipi                                # << Type the name of your sub domain or OCP cluster's name
    ? Pull Secret [? for help] ************************************************
    INFO Install-Config created in: .
    ```
@@ -680,31 +747,31 @@ In this section we will create our installation configuration files which will b
      - cidr: 10.128.0.0/14
        hostPrefix: 23
      machineNetwork:
-     - cidr: 10.38.18.192/26   ## << This should be your HPOC cluster's subnet
+     - cidr: 10.38.238.128/27   ## << This should be your HPOC cluster's subnet
      networkType: OpenShiftSDN
      serviceNetwork:
      - 172.30.0.0/16
    platform:
    nutanix:
-      apiVIP: 10.38.18.219
-      ingressVIP: 10.38.18.220
+      apiVIP: 10.38.238.133
+      ingressVIP: 10.38.238.134
       prismCentral:
          endpoint:
            address: pc.ntnxlab.local
            port: 9440
-         password: techX2020!
+         password: passwordtobereplaced
          username: admin
       prismElements:
       - endpoint:
-          address: 10.38.18.199
+          address: 10.38.238.37
           port: 9440
         uuid: 0005e93a-3b29-fa1a-6b84-ac1f6b6922d1
       subnetUUIDs:
-      - 34c84ddf-6c6e-46bf-9a5c-617b0b08a92c
+      - 2146926b-e757-4778-b829-5d85150a7fe1
    publish: External
    pullSecret: '{"auths": ...}'
    sshKey: |
-     ssh-rsa AAAA..
+     ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAii7qFDhVadLx5lULAG/ooCUTA/ATSmXbArs+GdHxbUWd/bNGZCXnaQ2L1mSVVGDxfTbSaTJ3En3tVlMtD2RjZPdhqWESCaoj2kXLYSiNDS9qz3SK6h822je/f9O9CzCTrw2XGhnDVwmNraUvO5wmQObCDthTXc72PcBOd6oa4ENsnuY9HtiETg29TZXgCYPFXipLBHSZYkBmGgccAeY9dq5ywiywBJLuoSovXkkRJk3cd7GyhCRIwYzqfdgSmiAMYgJLrz/UuLxatPqXts2D8v1xqR9EPNZNzgd4QHK4of1lqsNRuz2SxkwqLcXSw0mGcAL8mIwVpzhPzwmENC5Orw==
    ```
 
 6. Now we can create all the other manifests required for OCP cluster installation
@@ -832,7 +899,9 @@ This will be simplest part of all, provided you have done everything correctly t
    INFO Login to the console with user: "kubeadmin", and password: "xxxx-xxxx-xxxx-xxxx" 
    INFO Time elapsed: 27m0s
    ```
-3. Once the installation is done we can access OCP cluster using the following ways:
+3. Note down the credential for kubeadmin.  You will need it to login to the OpenShift cluster
+
+4.  Once the installation is done we can access OCP cluster using the following ways:
    
     <Tabs groupId="Login Method">
     <TabItem value="kubeconfig file" label="kubeconfig">
@@ -881,7 +950,7 @@ This will be simplest part of all, provided you have done everything correctly t
 Run through the following if you would like to delete the OCP cluster. This step is optional for HPOC as it resets at the  end of reservation.
 
 
-1. In your UserXX-LinuxToolsVM 
+1. In your LinuxToolsVM (Eg LinuxToolVM1, LinuxToolVM2, LinuxToolVM3 etc) 
 
 2. Change to you working directory that we created before (if not there already)
 
