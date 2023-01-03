@@ -151,25 +151,3 @@ hand side of this guide.
 
     ![](ocp_oadp_images/oadp-22.png)
 
-## Create Nutanix CSI Snapshot Class
-
-1.  Putty into the LinuxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
-
-2.  Run this command to create the yaml file
-
-    ```bash
-    cat << EOF > ./csi-snapshot-class.yaml
-    apiVersion: snapshot.storage.k8s.io/v1beta1
-    kind: VolumeSnapshotClass
-    metadata:
-    name: nutanix-snapshot-class
-    labels:
-    velero.io/csi-volumesnapshot-class: "true"
-    driver: csi.nutanix.com
-    parameters:
-    storageType: NutanixVolumes
-    csi.storage.k8s.io/snapshotter-secret-name: ntnx-secret
-    csi.storage.k8s.io/snapshotter-secret-namespace: openshift-cluster-csi-drivers
-    deletionPolicy: Delete
-    EOF
-    ```

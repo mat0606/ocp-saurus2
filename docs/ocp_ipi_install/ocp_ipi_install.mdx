@@ -924,6 +924,18 @@ This will be simplest part of all, provided you have done everything correctly t
    
    You have sucessfully installed OCP using IPI.
 
+## Machine API provider
+
+With the IPI installation from OpenShift 4.11, Nutanix also introduces support for the Machine API. The Machine API Operator manages the underlying OpenShift VMs through the concept of Machines and MachineSets. 
+
+1.  Select **Compute**.  Select **Nodes**. All the Nutanix VMs were listed here.
+
+   ![](images/IPI-Node-1.png)
+
+2.  Select **Machines**.  Each Node is managed as Machines by the Machine API.
+
+   ![](images/IPI-Node-2.png)
+
 ## Cleanup (optional)
 
 Run through the following if you would like to delete the OCP cluster. This step is optional for HPOC as it resets at the  end of reservation.

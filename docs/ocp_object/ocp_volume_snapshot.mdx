@@ -21,8 +21,8 @@ PVC.
 
 1.  Login to LinxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
 
-2.  Run this command.  This command assumes the CSI Driver was installed using RedHat OpenShift Console 
-    OperatorHub.  
+2.  **This command assumes the CSI Driver was installed using RedHat OpenShift Console 
+    OperatorHub.**  
     
     If you had installed the CSI Driver through NCM Self Service, please replace the 
 
@@ -30,10 +30,12 @@ PVC.
 
     ```bash
     cat << EOF > ./volume-snapshot-class.yaml
-    apiVersion: snapshot.storage.k8s.io/v1beta1
+    apiVersion: snapshot.storage.k8s.io/v1
     kind: VolumeSnapshotClass
     metadata:
-      name: acs-abs-snapshot-class
+      name: nutanix-snapshot-class
+      labels:
+        velero.io/csi-volumesnapshot-class: "true"
     driver: csi.nutanix.com
     parameters:
       storageType: NutanixVolumes
@@ -48,3 +50,45 @@ PVC.
     ```bash
     oc apply -f volume-snapshot-class.yaml
     ```
+
+3.  Run this command to verify the creation of the Volume Snapshot Class
+
+  ```bash
+  oc get VolumeSnapshotClass
+  ```
+
+  ![](ocp_volume_snapshot_images/volume-snapshot-1.png)
+
+  ## Create the Snapshot of a Persistent Volume Claim (PVC)
+
+1. In the RedHat OpenShift console, navigate to **Storage**.  Click on **Persistent Volume Claim**
+
+  ![](ocp_volume_snapshot_images/volume-snapshot-2.png)
+
+2. In the LinuxToolVM, run the following command to create the manifest to create the snapshot of a PVC
+
+  - Replace the PVC-name with the volume PVC created earlier.
+
+    ```bash
+    cat << EOF > volume-snapshot.yaml
+    apiVersion: snapshot.storage.k8s.io/v1
+    kind: VolumeSnapshot
+    metadata:
+      name: pvc-vol-01-snapshot1
+      namespace: default
+    spec:
+      volumeSnapshotClassName: nutanix-snapshot-class
+      source:
+        persistentVolumeClaimName: PVC-name
+    EOF
+    ```
+
+2.  Run this command to create the snapshot of the PVC.
+
+  ```bash
+  oc create -f volume-snapshot.yaml
+  ```
+
+3.  Verify the VolumeSnapshot in the RedHat OpenShift console
+
+  ![](ocp_volume_snapshot_images/volume-snapshot-3.png)

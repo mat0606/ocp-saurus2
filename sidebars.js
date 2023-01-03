@@ -30,7 +30,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Backup/Restore using RedHat OADP',
-      items: ['ocp_object/ocp_object','ocp_object/ocp_worker_nodes','ocp_object/ocp_volume_snapshot','ocp_object/ocp_odf'],
+      items: ['ocp_object/ocp_object','ocp_object/ocp_worker_nodes','ocp_object/ocp_volume_snapshot','ocp_object/ocp_odf','ocp_object/ocp_backup_restore'],
     },
     {
       type: 'category',
