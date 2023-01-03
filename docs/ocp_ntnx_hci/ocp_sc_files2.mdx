@@ -82,7 +82,7 @@ Let's create a new share to provide it as a storage location for our storage cla
 1. Use the following yaml file to create a storage class with Nutanix files as destination
 
    ```bash 
-   cat << EOF 
+   cat << EOF > nutanix-dynfiles.yaml
    kind: StorageClass
    apiVersion: storage.k8s.io/v1
    metadata:
@@ -90,7 +90,7 @@ Let's create a new share to provide it as a storage location for our storage cla
    provisioner: csi.nutanix.com
    parameters:
      dynamicProv: ENABLED
-     nfsServerName: BootcampFS    ## << Change this to your Files server name (case-sensitive)
+     nfsServerName: BootcampFS    
      csi.storage.k8s.io/provisioner-secret-name: ntnx-secret
      csi.storage.k8s.io/provisioner-secret-namespace: openshift-cluster-csi-drivers
      csi.storage.k8s.io/node-publish-secret-name: ntnx-secret
@@ -100,6 +100,7 @@ Let's create a new share to provide it as a storage location for our storage cla
      storageType: NutanixFiles
      description: "added by OCP dynamic provisioning"
    allowVolumeExpansion: true
+   EOF
    ```
 2. Edit the file to make configure your file share and file server 
 
@@ -126,5 +127,9 @@ Let's create a new share to provide it as a storage location for our storage cla
    nutanix-dynfiles           csi.nutanix.com   Delete          Immediate           true                   67s
    nutanix-volumes (default)  csi.nutanix.com   Delete          Immediate           true                   17m   
    ```
+
+5.  Login to RedHat OpenShift console.  Click on **Storage**.  Click on **StorageClasses" to verify the successful creation.
+
+   ![](ocp_files_images/Files-SC2-1.png)
 
 Now that you have deployed two storage classes with backend storage of Nutanix Volumes and Files, we will use them in our subesequent labs.

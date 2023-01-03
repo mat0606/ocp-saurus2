@@ -15,7 +15,18 @@ OADP backs up and restores Kubernetes resources and internal images at the granu
 capabilities, which can be leveraged by OADP to back up and restore persistent volumes (PVs).
 
 ## Pre-requisites/Requirements
-1.  The RedHat OpenShift 4.11 cluster was created using IPI and Nutanix CSI installed
+1.  The RedHat OpenShift 4.11 cluster was created either using NCM Self Service or IPI 
+
+2.  **Nutanix CSI must be installed**
+
+3.  **Nutanix Volume deployment** must be installed.  Refer to **Nutanix Volume Deployment** on the left 
+hand side of this guide.
+
+    -  Option 1 is specific for UPI installation & CSI installation through NCM Self Service
+        - Create Nutanix Volume Storage Class using RedHat OpenShift Console.
+
+    -  Option 2 is specific for IPI deployment 
+        - Create Volume Storage Class using Command Line.
 
 2.  Terminal environment must have the following commands:
     - oc (Available in both UPI & IPI installation)

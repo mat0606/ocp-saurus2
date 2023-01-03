@@ -20,7 +20,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Nutanix Files Deployment',
-      items: ['ocp_ntnx_hci/ocp_sc_files', 'ocp_ntnx_hci/ocp_sc_files2','ocp_ntnx_hci/ocp_files_pvc','optional_labs/ocp_image_registry'],
+      items: ['ocp_ntnx_hci/ocp_sc_files', 'ocp_ntnx_hci/ocp_sc_files2','ocp_ntnx_hci/ocp_files_pvc'],
     },
     {
       type: 'category',
@@ -29,7 +29,7 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'OCP Workload Backup/Restore using Karsten',
+      label: 'OCP Optional Lab: Workload Backup/Restore using Kasten',
       items: ['optional_labs/objects_prep','workloads_on_ocp/ocp_k10','workloads_on_ocp/ocp_wordpress_deploy','workloads_on_ocp/ocp_k10_backup_restore'],
     },
     {
