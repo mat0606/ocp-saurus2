@@ -1,0 +1,50 @@
+---
+sidebar_position: 7
+title: "Volume Snapshot in Nutanix"
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Volume Snapshot in Nutanix
+
+Use snapshots of persistent volume claims (PVCs) to create new PVCs and persistent volumes
+(PVs) with Nutanix Volumes only. CSI driver supports taking volume snapshots and restoring
+the volume. CSI driver creates a storage efficient snapshot in a second using the volumes
+snapshot capability. You can also create a backup of your application in Nutanix Objects, AWS
+S3, or any S3 compatible storage.
+Taking a snapshot of a PVC lets you reuse the data in that snapshot to create a new PVC and
+PV in the future. The snapshot only stores data from the time you take the snapshot. The newly
+created snapshot appears as a VolumeSnapshot in the same Kubernetes cluster as the original
+PVC.
+
+## Create a Volume Snapshot Class
+
+1.  Login to LinxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
+
+2.  Run this command.  This command assumes the CSI Driver was installed using RedHat OpenShift Console 
+    OperatorHub.  
+    
+    If you had installed the CSI Driver through NCM Self Service, please replace the 
+
+    - snapshotter-secret-namespace to ntnx-system.
+
+    ```bash
+    cat << EOF > ./volume-snapshot-class.yaml
+    apiVersion: snapshot.storage.k8s.io/v1beta1
+    kind: VolumeSnapshotClass
+    metadata:
+      name: acs-abs-snapshot-class
+    driver: csi.nutanix.com
+    parameters:
+      storageType: NutanixVolumes
+      csi.storage.k8s.io/snapshotter-secret-name: ntnx-secret
+      csi.storage.k8s.io/snapshotter-secret-namespace: openshift-cluster-csi-drivers
+    deletionPolicy: Delete
+    EOF
+    ```
+
+2.  Run this command to create the Volume Snapshot Class
+
+    ```bash
+    oc apply -f volume-snapshot-class.yaml
+    ```

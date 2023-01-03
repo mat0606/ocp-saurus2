@@ -9,7 +9,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Nutanix CSI Deployment',
-      items: ['ocp_ntnx_hci/ocp_csi', 'ocp_ntnx_hci/ocp_csi2','ocp_ntnx_hci/ocp_csi_prometheus']
+      items: ['ocp_ntnx_hci/ocp_csi', 'ocp_ntnx_hci/ocp_csi2']
     },
     "ocp_project/ocp_project",
     {
@@ -24,8 +24,13 @@ module.exports = {
     },
     {
       type: 'category',
+      label: 'Monitoring with Prometheus',
+      items: ['ocp_ntnx_hci/ocp_csi_prometheus','ocp_object/ocp_object_prometheus'],
+    },
+    {
+      type: 'category',
       label: 'Backup/Restore using RedHat OADP',
-      items: ['ocp_object/ocp_object','ocp_object/ocp_worker_nodes','ocp_object/ocp_odf'],
+      items: ['ocp_object/ocp_object','ocp_object/ocp_worker_nodes','ocp_object/ocp_volume_snapshot','ocp_object/ocp_odf'],
     },
     {
       type: 'category',

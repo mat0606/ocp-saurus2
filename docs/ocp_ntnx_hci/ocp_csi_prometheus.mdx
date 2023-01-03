@@ -23,11 +23,15 @@ import TabItem from '@theme/TabItem';
 
 5.  Run this command to install git
 
+    ```bash
     sudo yum install -y git
+    ```
 
 6.  Run this command to download the CSI files.
 
-    git clone http://github.com/nutanix/csi-plugin.
+    ```bash
+    git clone http://github.com/nutanix/csi-plugin
+    ```
 
     ![](ocp_csi_prometheus_images/CSI-Prometheus-1.png)
 
@@ -41,10 +45,57 @@ import TabItem from '@theme/TabItem';
 
     ![](ocp_csi_prometheus_images/CSI-Prometheus-2.png)
 
-8.  Navigate to csi-plugin/deploy directory.  Run this command
+8.  Navigate to csi-plugin/deploy directory.  Look at the contents of the service-prometheus-csi.yaml.
+
+    ```
+    note
+        Replace the namespace
+        - to ntnx-system when the CSI was installed through NCM Self Service or
+        - to openshift-cluster-csi-drivers when the CSI was installed through RedHat OpenShift OperatorHub
+    ```
+
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-4.png)
+    ![](ocp_csi_prometheus_images/CSI-Prometheus-5.png)
+
+9.  Run this command
 
     ```bash
-    oc -n kube-system create -f service-prometheus-csi.yaml
+    oc create -f service-prometheus-csi.yaml
     ```
 
     ![](ocp_csi_prometheus_images/CSI-Prometheus-3.png)
+
+## Create Service Monitor in RedHat OpenShift
+
+1.  Run this command to expose the service to the Load Balancer or Master Node.  
+    ```note
+        Replace the namespace
+        - to ntnx-system when the CSI was installed through NCM Self Service or
+        - to openshift-cluster-csi-drivers when the CSI was installed through RedHat OpenShift OperatorHub
+    ```
+    
+    ```bash
+    cat << EOF > ./ingress-prometheus-csi.yaml
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        k8s-app: csi-provisioner-ntnx-plugin
+      name: csi-provisioner-ntnx-plugin
+      namespace: openshift-cluster-csi-drivers
+    spec:
+      endpoints:
+      - interval: 30s
+        port: web
+        scheme: https
+      selector:
+        matchLabels:
+          app: csi-provisioner-ntnx-plugin
+    EOF
+
+2  Run this command to create the service monitor.  
+
+    ```
+    bash
+    oc apply -f ingress-prometheus-csi.yaml
+    ```
