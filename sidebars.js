@@ -32,13 +32,11 @@ module.exports = {
       label: 'OCP Workload Backup/Restore using Karsten',
       items: ['optional_labs/objects_prep','workloads_on_ocp/ocp_k10','workloads_on_ocp/ocp_wordpress_deploy','workloads_on_ocp/ocp_k10_backup_restore'],
     },
-    "ocp_ndb/ocp_ndb",
     {
       type: 'category',
       label: 'OCP Optional Labs',
-      items: ['optional_labs/ocp_vms_2','optional_labs/ocp_idp'],
+      items: ['optional_labs/ocp_vms_2','optional_labs/ocp_idp','optional_labs/ocp_image_registry',"ocp_ndb/ocp_ndb"],
     },
-    'optional_labs/ocp_image_registry',
     {
       type: 'category',
       label: 'Tools VMs',

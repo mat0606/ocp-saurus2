@@ -15,7 +15,7 @@ OADP backs up and restores Kubernetes resources and internal images at the granu
 capabilities, which can be leveraged by OADP to back up and restore persistent volumes (PVs).
 
 ## Pre-requisites/Requirements
-1.  The RedHat OpenShift 4.11 cluster was created using IPI
+1.  The RedHat OpenShift 4.11 cluster was created using IPI and Nutanix CSI installed
 
 2.  Terminal environment must have the following commands:
     - oc (Available in both UPI & IPI installation)
@@ -26,9 +26,6 @@ capabilities, which can be leveraged by OADP to back up and restore persistent v
     - alias velero='oc -n openshift-adp exec deployment/velero -c velero -it -- ./velero'
 
 4.  Download velero from Github Release
-Alternatively enter prepared environment in your terminal with docker run -it ghcr.io/kaovilai/oadp-cli:v1.0.1 bash
-source can be found at https://github.com/kaovilai/oadp-cli
-Authenticate as Cluster Admin inside your environment of an OpenShift 4.9 Cluster.
 
 5.  Your cluster meets the minimum requirement for ODF in Internal Mode deployment
     - 3 worker nodes, each with at least:
@@ -36,7 +33,7 @@ Authenticate as Cluster Admin inside your environment of an OpenShift 4.9 Cluste
         - 24 GiB memory
         - 1+ storage devices
 
-## Installing OpenShift Data Foundation Operator
+## Installing OpenShift Data Foundation (ODF) Operator
 
 1.  Open the RedHat OpenShift console in the browser.  Put in the following:
 
@@ -71,3 +68,96 @@ Authenticate as Cluster Admin inside your environment of an OpenShift 4.9 Cluste
 
     ![](ocp_oadp_images/odf-7.png)
     ![](ocp_oadp_images/odf-8.png)
+
+9.  Storage System created successfully
+
+    ![](ocp_oadp_images/odf-9.png)
+
+### Verify ODF installation
+
+1.  In the LinuxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc), run the following commands:
+
+    ```bash
+    KUBECONFIG=~/openshift/auth/kubeconfig
+    export KUBECONFIG
+    oc get storagecluster -n openshift-storage ocs-storagecluster -o jsonpath='{.status.phase}{"\n"}'
+    ```
+
+## Install OpenShift API for Data Protection (OADP) Operator
+
+1.  Login to RedHat OpenShift Console.
+
+2.  Select **Operators**.  Select **OperatorHub**
+
+3.  Filter by **openshift-api**.  Select **OADP Operator by RedHat**
+
+    ![](ocp_oadp_images/oadp-14.png)
+
+4.  Click on **Install**
+
+    ![](ocp_oadp_images/oadp-15.png)
+
+5.  Fill in the following.  Click on **Install**
+
+    ![](ocp_oadp_images/oadp-16.png)
+    ![](ocp_oadp_images/oadp-17.png)
+    ![](ocp_oadp_images/oadp-18.png)
+
+6.  Wait for a few minutes.
+
+    ![](ocp_oadp_images/oadp-19.png)
+
+7.  Click on **View Operator**
+
+    ![](ocp_oadp_images/oadp-20.png)
+
+8.  OADP Operator installed successfully
+
+    ![](ocp_oadp_images/oadp-21.png)
+
+## Create Credentials Secret For OADP Operator To Use
+
+1.  Putty into the LinuxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
+
+2.  Modify the credentials-velero & replace the following:
+
+    - aws_access_key_id with Nutanix Objects Access Key
+    - aws_secret_access_key with Nutanix Objects Secret Access Key
+
+    ```bash
+    cat << EOF > ./credentials-velero
+    [default]
+    aws_access_key_id=my_access_key
+    aws_secret_access_key=my_secret_key
+    EOF
+    ```
+
+3.  Run this command to create the secret
+
+    ```bash
+    oc create secret generic cloud-credentials -n openshift-adp --from-file cloud=credentials-velero
+    ```
+
+    ![](ocp_oadp_images/oadp-22.png)
+
+## Create Nutanix CSI Snapshot Class
+
+1.  Putty into the LinuxToolVM (Eg LinuxToolVM1, LinuxToolVM2 etc)
+
+2.  Run this command to create the yaml file
+
+    ```bash
+    cat << EOF > ./csi-snapshot-class.yaml
+    apiVersion: snapshot.storage.k8s.io/v1beta1
+    kind: VolumeSnapshotClass
+    metadata:
+    name: nutanix-snapshot-class
+    labels:
+    velero.io/csi-volumesnapshot-class: "true"
+    driver: csi.nutanix.com
+    parameters:
+    storageType: NutanixVolumes
+    csi.storage.k8s.io/snapshotter-secret-name: ntnx-secret
+    csi.storage.k8s.io/snapshotter-secret-namespace: ntnx-system
+    deletionPolicy: Delete
+    ```
