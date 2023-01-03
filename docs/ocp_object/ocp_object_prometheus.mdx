@@ -188,3 +188,16 @@ import TabItem from '@theme/TabItem';
     ```bash
     oc create -f object_bucket_service_monitor.yaml
     ```
+
+16.  In the RedHat OpenShift console, navigate to **Metrics**.  Navigate to **Targets**.  Filter by **Nutanix**.
+Verify the Object endpoints are available
+
+    ![](ocp_prometheus_images/object-prometheus-3.png)
+
+17.  Click on **Metrics**.  Filter by **nutanix_objectstore_num_buckets**.  Click on **Run Queries**
+
+    ![](ocp_prometheus_images/object-prometheus-4.png)
+
+18.  The object bucket creation metric was deployed
+
+    ![](ocp_prometheus_images/object-prometheus-5.png)
